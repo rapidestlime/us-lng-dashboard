@@ -72,7 +72,7 @@ class NewsDataFetcher:
     def __init__(self):
         self.api_key = Config.ALPHA_VANTAGE_KEY
         
-    def fetch_news(self, keywords: str = "natural gas", limit: int = 20) -> list:
+    def fetch_news(self, keywords: str = "natural gas", limit: int = 50) -> list:
         """Fetch news from Alpha Vantage"""
         if not self.api_key:
             logger.error("Alpha Vantage API key not configured")
@@ -83,7 +83,7 @@ class NewsDataFetcher:
             params = {
                 'function': 'NEWS_SENTIMENT',
                 'tickers': 'KOLD,UNG,BOIL,XOP,XLE',  # Natural gas and energy ETFs
-                'topics': 'energy',
+                'topics': 'energy_transportation',
                 'apikey': self.api_key,
                 'limit': limit,
                 'sort': 'LATEST'
