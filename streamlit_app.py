@@ -4,7 +4,7 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import logging
 from scheduler import DataScheduler
 from analytics import NaturalGasAnalytics
@@ -410,8 +410,8 @@ def create_news_dashboard(scheduler: DataScheduler):
     #     st.metric("Avg Sentiment", sentiment_label, f"{avg_sentiment:.3f}")
     with col2:
         recent_articles = [a for a in news_data if 
-                          datetime.strptime(a['publishedAt'], '%Y-%m-%dT%H:%M:%SZ') > 
-                          datetime.now() - timedelta(hours=24)]
+                  datetime.strptime(a['publishedAt'], '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc) > 
+                  datetime.now(timezone.utc) - timedelta(hours=24)]
         st.metric("Last 24h", len(recent_articles))
     
     # Display articles

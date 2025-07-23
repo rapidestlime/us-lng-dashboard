@@ -17,29 +17,32 @@ class Config:
     # EIA Series IDs
     EIA_SERIES = {
         # LNG Exports (Monthly, BCF)
-        'lng_total': 'NG.NLNG_US_M.M',
-        'lng_sabine_pass': 'NG.NLNG_SAB_M.M',
-        'lng_corpus_christi': 'NG.NLNG_COR_M.M',
-        'lng_cameron': 'NG.NLNG_CAM_M.M',
-        'lng_freeport': 'NG.NLNG_FRE_M.M',
-        'lng_cove_point': 'NG.NLNG_COV_M.M',
-        'lng_elba_island': 'NG.NLNG_ELB_M.M',
+        'lng_total': 'NG.N9133US2.M',
+        'lng_sabine_pass': 'NG.NGM_EPG0_ENG_YSPL-Z00_MMCF.M',
+        'lng_corpus_christi': 'NG.NGM_EPG0_ENG_YCRP-Z00_MMCF.M',
+        'lng_cameron': 'NG.NGM_EPG0_ENG_YCAM-Z00_MMCF.M',
+        'lng_freeport': 'NG.NGM_EPG0_ENG_YFPT-Z00_MMCF.M',
+        'lng_cove_point': 'NG.NGM_EPG0_ENG_YCPT-Z00_MMCF.M',
+        'lng_elba_island': 'NG.NGM_EPG0_ENG_YELBA-Z00_MMCF.M',
         
         # Storage (Weekly, BCF)
-        'storage_total': 'NG.NW2_EPG0_SWO_R48_BCF.W',
-        'storage_east': 'NG.NW2_EPG0_SWO_R1Z_BCF.W',
-        'storage_west': 'NG.NW2_EPG0_SWO_R2Z_BCF.W',
-        'storage_producing': 'NG.NW2_EPG0_SWO_R3Z_BCF.W',
+        'storage_total': 'NG.NW2_EPG0_SAO_R48_BCF.W',
+        'storage_east': 'NG.NW2_EPG0_SAO_R88_BCF.W',
+        'storage_west': 'NG.NW2_EPG0_SAO_R89_BCF.W',
+        'storage_producing': 'NG.NW2_EPG0_SAO_R87_BCF.W',
         
         # Production (Monthly, BCF)
-        'production_total': 'NG.N9070US2_M.M',
-        'production_associated': 'NG.N9070US1_M.M',
-        'production_dry': 'NG.N9070US3_M.M',
+        'production_total': 'NG.N9050US2.M',
+        'production_associated': 'NG.N9060US2.M',
+        'production_dry': 'NG.N9070US2.M',
         
         # Consumption (Monthly, BCF)
-        'consumption_power': 'NG.N3035US2_M.M',
-        'consumption_industrial': 'NG.N3025US2_M.M',
-        'consumption_residential': 'NG.N3010US2_M.M'
+        'consumption_power': 'NG.N3045US2.M',
+        'consumption_industrial': 'NG.N3035US2.M',
+        'consumption_residential': 'NG.N3010US2.M',
+        'consumption_commercial': 'NG.N3020US2.M',
+        'consumption_total': 'NG.N9140US2.M',
+
     }
     
     # LNG Facility Information
