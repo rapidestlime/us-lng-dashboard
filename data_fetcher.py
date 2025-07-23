@@ -94,7 +94,7 @@ class NewsDataFetcher:
                 'searchIn': 'content',
                 'sortBy': 'publishedAt,relevancy',
                 'language': 'en',
-                'apikey': '8dc4bfb75d404fb5bfbc038b8e570322',
+                'apikey': self.api_key,
             }
             response = requests.get(url, params=params, timeout=30)
             response.raise_for_status()
