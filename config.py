@@ -17,24 +17,24 @@ class Config:
     # EIA Series IDs
     EIA_SERIES = {
         # LNG Exports (Monthly, BCF)
-        'lng_total': 'NG.N9133US2.M',
-        'lng_sabine_pass': 'NG.NGM_EPG0_ENG_YSPL-Z00_MMCF.M',
-        'lng_corpus_christi': 'NG.NGM_EPG0_ENG_YCRP-Z00_MMCF.M',
-        'lng_cameron': 'NG.NGM_EPG0_ENG_YCAM-Z00_MMCF.M',
-        'lng_freeport': 'NG.NGM_EPG0_ENG_YFPT-Z00_MMCF.M',
-        'lng_cove_point': 'NG.NGM_EPG0_ENG_YCPT-Z00_MMCF.M',
-        'lng_elba_island': 'NG.NGM_EPG0_ENG_YELBA-Z00_MMCF.M',
+        'lng_total': 'N9133US2',
+        'lng_sabine_pass': 'NGM_EPG0_ENG_YSPL-Z00_MMCF',
+        'lng_corpus_christi': 'NGM_EPG0_ENG_YCRP-Z00_MMCF',
+        'lng_cameron': 'NGM_EPG0_ENG_YCAM-Z00_MMCF',
+        'lng_freeport': 'NGM_EPG0_ENG_YFPT-Z00_MMCF',
+        'lng_cove_point': 'NGM_EPG0_ENG_YCPT-Z00_MMCF',
+        'lng_elba_island': 'NGM_EPG0_ENG_YELBA-Z00_MMCF',
         
         # Storage (Weekly, BCF)
-        'storage_total': 'NG.NW2_EPG0_SAO_R48_BCF.W',
-        'storage_east': 'NG.NW2_EPG0_SAO_R88_BCF.W',
-        'storage_west': 'NG.NW2_EPG0_SAO_R89_BCF.W',
-        'storage_producing': 'NG.NW2_EPG0_SAO_R87_BCF.W',
+        'storage_total': 'NW2_EPG0_SAO_R48_BCF',
+        'storage_east': 'NW2_EPG0_SAO_R88_BCF',
+        'storage_west': 'NW2_EPG0_SAO_R89_BCF',
+        'storage_producing': 'NW2_EPG0_SAO_R87_BCF',
         
         # Production (Monthly, BCF)
-        'production_total': 'NG.N9050US2.M',
-        'production_associated': 'NG.N9060US2.M',
-        'production_dry': 'NG.N9070US2.M',
+        'production_total': 'N9050US2',
+        'production_associated': 'N9060US2',
+        'production_dry': 'N9070US2',
         
         # Consumption (Monthly, BCF)
         'consumption_power': 'NG.N3045US2.M',
