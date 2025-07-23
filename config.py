@@ -7,6 +7,7 @@ class Config:
     # API Keys
     EIA_API_KEY = os.getenv('EIA_API_KEY')
     ALPHA_VANTAGE_KEY = os.getenv('ALPHA_VANTAGE_KEY')
+    NEWSAPI_KEY = os.getenv('NEWSAPI_KEY')
     
     # Data refresh intervals (in minutes)
     LNG_DATA_REFRESH = 60  # 1 hour
