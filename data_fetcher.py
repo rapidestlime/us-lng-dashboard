@@ -90,10 +90,11 @@ class NewsDataFetcher:
             # }
             url = "https://newsapi.org/v2/everything"
             params = {
-                'q': '%22natural%20gas%22OR%22lng%22',
+                'q': '"natural%20gas"OR"lng"',
                 'searchIn': 'content',
                 'sortBy': 'publishedAt,relevancy',
-                'apikey': self.api_key,
+                'language': 'en',
+                'apikey': '8dc4bfb75d404fb5bfbc038b8e570322',
             }
             response = requests.get(url, params=params, timeout=30)
             response.raise_for_status()
