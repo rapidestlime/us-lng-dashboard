@@ -70,32 +70,38 @@ class EIADataFetcher:
 
 class NewsDataFetcher:
     def __init__(self):
-        self.api_key = Config.ALPHA_VANTAGE_KEY
+        self.api_key = Config.NEWSAPI_KEY
         
     def fetch_news(self, keywords: str = "natural gas", limit: int = 50) -> list:
-        """Fetch news from Alpha Vantage"""
+        """Fetch news from NewsAPI"""
         if not self.api_key:
-            logger.error("Alpha Vantage API key not configured")
+            logger.error("NewsAPI API key not configured")
             return []
             
         try:
-            url = "https://www.alphavantage.co/query"
+            # url = "https://www.alphavantage.co/query"
+            # params = {
+            #     'function': 'NEWS_SENTIMENT',
+            #     'tickers': 'KOLD,UNG,BOIL,XOP,XLE',  # Natural gas and energy ETFs
+            #     'topics': 'energy_transportation',
+            #     'apikey': self.api_key,
+            #     'limit': limit,
+            #     'sort': 'LATEST'
+            # }
+            url = "https://newsapi.org/v2/everything"
             params = {
-                'function': 'NEWS_SENTIMENT',
-                'tickers': 'KOLD,UNG,BOIL,XOP,XLE',  # Natural gas and energy ETFs
-                'topics': 'energy_transportation',
+                'q': '%22natural%20gas%22OR%22lng%22',
+                'searchIn': 'content',
+                'sortBy': 'publishedAt,relevancy',
                 'apikey': self.api_key,
-                'limit': limit,
-                'sort': 'LATEST'
             }
-            
             response = requests.get(url, params=params, timeout=30)
             response.raise_for_status()
             
             data = response.json()
-            if 'feed' in data:
-                logger.info(f"Fetched {len(data['feed'])} news articles")
-                return data['feed']
+            if 'articles' in data:
+                logger.info(f"Fetched {len(data['articles'])} news articles") # returns latest 100 by default
+                return data['articles']
             else:
                 logger.warning("No news feed found in response")
                 return []

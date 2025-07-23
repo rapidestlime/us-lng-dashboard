@@ -372,7 +372,7 @@ def main():
         st.info("API keys configured via environment variables")
         st.json({
             "EIA_API_KEY": "✅ Configured" if Config.EIA_API_KEY else "❌ Missing",
-            "ALPHA_VANTAGE_KEY": "✅ Configured" if Config.ALPHA_VANTAGE_KEY else "❌ Missing"
+            "NEWSAPI_KEY": "✅ Configured" if Config.NEWSAPI_KEY else "❌ Missing"
         })
     
     # Display selected dashboard
@@ -398,46 +398,46 @@ def create_news_dashboard(scheduler: DataScheduler):
         st.warning("No news data available")
         return
     
-    # News sentiment analysis
-    sentiments = [float(article.get('overall_sentiment_score', 0)) for article in news_data]
-    avg_sentiment = np.mean(sentiments) if sentiments else 0
+    # News sentiment analysis - not using alphavantage for now
+    # sentiments = [float(article.get('overall_sentiment_score', 0)) for article in news_data]
+    # avg_sentiment = np.mean(sentiments) if sentiments else 0
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     with col1:
         st.metric("Articles", len(news_data))
+    # with col2:
+    #     sentiment_label = "Positive" if avg_sentiment > 0.1 else "Negative" if avg_sentiment < -0.1 else "Neutral"
+    #     st.metric("Avg Sentiment", sentiment_label, f"{avg_sentiment:.3f}")
     with col2:
-        sentiment_label = "Positive" if avg_sentiment > 0.1 else "Negative" if avg_sentiment < -0.1 else "Neutral"
-        st.metric("Avg Sentiment", sentiment_label, f"{avg_sentiment:.3f}")
-    with col3:
         recent_articles = [a for a in news_data if 
-                          datetime.strptime(a['time_published'], '%Y%m%dT%H%M%S') > 
+                          datetime.strptime(a['publishedAt'], '%Y-%m-%dT%H:%M:%SZ') > 
                           datetime.now() - timedelta(hours=24)]
         st.metric("Last 24h", len(recent_articles))
     
     # Display articles
-    for i, article in enumerate(news_data[:10]):
+    for i, article in enumerate(news_data):
         with st.expander(f"📖 {article['title'][:80]}..."):
-            col1, col2 = st.columns([3, 1])
+            col1, col2 = st.columns([2, 1])
             
             with col1:
-                st.write(f"**Source:** {article['source']}")
-                st.write(f"**Published:** {article['time_published']}")
-                st.write(f"**Summary:** {article['summary'][:200]}...")
+                st.write(f"**Source:** {article['source']['name']}")
+                st.write(f"**Published:** {article['publishedAt']}")
+                st.write(f"**Summary:** {article['description'][:200]}...")
                 
                 if 'url' in article:
                     st.write(f"**[Read Full Article]({article['url']})**")
             
-            with col2:
-                if 'overall_sentiment_score' in article:
-                    sentiment_score = float(article['overall_sentiment_score'])
-                    sentiment_label = article.get('overall_sentiment_label', 'Neutral')
+            # with col2:
+            #     if 'overall_sentiment_score' in article:
+            #         sentiment_score = float(article['overall_sentiment_score'])
+            #         sentiment_label = article.get('overall_sentiment_label', 'Neutral')
                     
-                    if sentiment_score > 0.1:
-                        st.success(f"📈 {sentiment_label}\n{sentiment_score:.3f}")
-                    elif sentiment_score < -0.1:
-                        st.error(f"📉 {sentiment_label}\n{sentiment_score:.3f}")
-                    else:
-                        st.info(f"➡️ {sentiment_label}\n{sentiment_score:.3f}")
+            #         if sentiment_score > 0.1:
+            #             st.success(f"📈 {sentiment_label}\n{sentiment_score:.3f}")
+            #         elif sentiment_score < -0.1:
+            #             st.error(f"📉 {sentiment_label}\n{sentiment_score:.3f}")
+            #         else:
+            #             st.info(f"➡️ {sentiment_label}\n{sentiment_score:.3f}")
 
 if __name__ == "__main__":
     main()
