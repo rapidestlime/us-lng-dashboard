@@ -62,6 +62,7 @@ class EIADataFetcher:
             params = {
                 'frequency': freq,
                 'data[0]': 'value',
+                'facets[series][]': series_id,
                 'api_key': self.api_key,
                 'start': start_date,
                 'sort[0][column]': 'period',
