@@ -17,7 +17,7 @@ class Config:
     # EIA Series IDs
     EIA_SERIES = {
         # LNG Exports (Monthly, BCF)
-        'lng_total': 'N9132US2',
+        'lng_total': 'N9133US2',
         'lng_sabine_pass': 'NGM_EPG0_ENG_YSPL-Z00_MMCF',
         'lng_corpus_christi': 'NGM_EPG0_ENG_YCRP-Z00_MMCF',
         'lng_cameron': 'NGM_EPG0_ENG_YCAM-Z00_MMCF',
@@ -26,10 +26,10 @@ class Config:
         'lng_elba_island': 'NGM_EPG0_ENG_YELBA-Z00_MMCF',
         
         # Storage (Weekly, BCF)
-        'storage_total': 'NW2_EPG0_SAO_R48_BCF',
-        'storage_east': 'NW2_EPG0_SAO_R88_BCF',
-        'storage_west': 'NW2_EPG0_SAO_R89_BCF',
-        'storage_producing': 'NW2_EPG0_SAO_R87_BCF',
+        'storage_total': 'NW2_EPG0_SWO_R48_BCF',
+        'storage_east': 'NW2_EPG0_SWO_R88_BCF',
+        'storage_west': 'NW2_EPG0_SWO_R89_BCF',
+        'storage_producing': 'NW2_EPG0_SWO_R87_BCF',
         
         # Production (Monthly, BCF)
         'production_total': 'N9050US2',
