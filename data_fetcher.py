@@ -19,13 +19,49 @@ class EIADataFetcher:
         if not self.api_key:
             logger.error("EIA API key not configured")
             return pd.DataFrame()
-            
+        
+        storage = ['NW2_EPG0_SAO_R48_BCF', #natural-gas/stor/wkly/data/
+                   'NW2_EPG0_SAO_R88_BCF',
+                   'NW2_EPG0_SAO_R89_BCF',
+                   'NW2_EPG0_SAO_R87_BCF'
+                   ]
+        
+        exports = ['N9133US2', #natural-gas/move/expc/data/
+                   'NGM_EPG0_ENG_YSPL-Z00_MMCF', #natural-gas/move/poe2/data/
+                    'NGM_EPG0_ENG_YCRP-Z00_MMCF',
+                    'NGM_EPG0_ENG_YCAM-Z00_MMCF',
+                    'NGM_EPG0_ENG_YFPT-Z00_MMCF',
+                    'NGM_EPG0_ENG_YCPT-Z00_MMCF',
+                    'NGM_EPG0_ENG_YELBA-Z00_MMCF'
+        ]
+
+        production = ['N9050US2', # natural-gas/sum/lsum/data/
+                   'N9012US2', # natural-gas/sum/lsum/data/
+                   'N9070US2' # natural-gas/sum/snd/data/
+                   ]
         try:
             if not start_date:
                 start_date = (datetime.now() - timedelta(days=730)).strftime('%Y-%m-%d')
             
-            url = f"{self.base_url}seriesid/{series_id}"
+            if series_id in exports:
+                freq = 'monthly'
+                if 'NGM' in series_id:
+                    url_extend = 'natural-gas/move/poe2/data/'
+                else:
+                    url_extend = 'natural-gas/move/expc/data/'
+            elif series_id in storage:
+                url_extend = 'natural-gas/stor/wkly/data/'
+                freq = 'weekly'
+            else:
+                freq = 'monthly'
+                if series_id == 'N9070US2':
+                    url_extend = 'natural-gas/sum/snd/data/'
+                else:
+                    url_extend =  'natural-gas/sum/lsum/data/'
+
             params = {
+                'frequency': freq,
+                'data[0]': 'value',
                 'api_key': self.api_key,
                 'start': start_date,
                 'sort[0][column]': 'period',
@@ -34,6 +70,7 @@ class EIADataFetcher:
                 'length': 5000
             }
             
+            url = self.base_url + url_extend
             response = requests.get(url, params=params, timeout=30)
             response.raise_for_status()
             
@@ -92,7 +129,7 @@ class NewsDataFetcher:
             params = {
                 'q': '"natural gas" OR "lng"',
                 'searchIn': 'content',
-                'sortBy': 'publishedAt,relevancy',
+                'sortBy': 'publishedAt',
                 'language': 'en',
                 'apikey': self.api_key,
             }

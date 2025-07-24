@@ -17,7 +17,7 @@ class Config:
     # EIA Series IDs
     EIA_SERIES = {
         # LNG Exports (Monthly, BCF)
-        'lng_total': 'N9133US2',
+        'lng_total': 'N9132US2',
         'lng_sabine_pass': 'NGM_EPG0_ENG_YSPL-Z00_MMCF',
         'lng_corpus_christi': 'NGM_EPG0_ENG_YCRP-Z00_MMCF',
         'lng_cameron': 'NGM_EPG0_ENG_YCAM-Z00_MMCF',
@@ -33,7 +33,7 @@ class Config:
         
         # Production (Monthly, BCF)
         'production_total': 'N9050US2',
-        'production_associated': 'N9060US2',
+        'production_associated': 'N9012US2',
         'production_dry': 'N9070US2',
         
         # Consumption (Monthly, BCF)
