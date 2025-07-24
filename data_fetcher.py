@@ -132,7 +132,7 @@ class NewsDataFetcher:
             url = "https://newsapi.org/v2/everything"
             params = {
                 'q': '("natural gas" OR "lng")',
-                'searchIn': 'content',
+                'searchIn': 'content,description',
                 'sortBy': 'publishedAt',
                 'language': 'en',
                 'apikey': self.api_key,
