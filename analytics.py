@@ -27,6 +27,8 @@ class NaturalGasAnalytics:
         storage_df['year'] = storage_df['period'].dt.year
         storage_df['month'] = storage_df['period'].dt.month
         
+        print(storage_df['year'].unique())
+        
         current_year = datetime.now().year
         historical_years = list(range(current_year - 5, current_year))
         
