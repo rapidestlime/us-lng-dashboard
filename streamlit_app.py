@@ -188,7 +188,7 @@ def create_enhanced_storage_dashboard(scheduler: DataScheduler):
     
     # Get cached data
     storage_data = scheduler.get_cached_data('storage_data')
-    st.write("DEBUG: storage_data keys:", list(storage_data.keys()) if storage_data else "No data")
+    # st.write("DEBUG: storage_data keys:", list(storage_data.keys()) if storage_data else "No data")
     if not storage_data:
         st.error("Storage data not available. Please check data pipeline.")
         return
@@ -198,11 +198,11 @@ def create_enhanced_storage_dashboard(scheduler: DataScheduler):
     # Process total storage data
     if 'storage_total' in storage_data:
         total_storage = storage_data['storage_total']
-        st.write("DEBUG: total_storage shape:", total_storage.shape)
-        st.write("DEBUG: total_storage columns:", total_storage.columns)
-        st.write("DEBUG: total_storage head:", total_storage.head())
+        # st.write("DEBUG: total_storage shape:", total_storage.shape)
+        # st.write("DEBUG: total_storage columns:", total_storage.columns)
+        # st.write("DEBUG: total_storage head:", total_storage.head())
         percentile_df = analytics.calculate_storage_percentiles(total_storage)
-        st.write("DEBUG: percentile_df shape:", percentile_df.shape if hasattr(percentile_df, 'shape') else "No df")
+        # st.write("DEBUG: percentile_df shape:", percentile_df.shape if hasattr(percentile_df, 'shape') else "No df")
         
         if not percentile_df.empty:
             latest = percentile_df.iloc[-1]

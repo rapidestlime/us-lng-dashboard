@@ -42,8 +42,8 @@ class EIADataFetcher:
                    'N9070US2' # natural-gas/sum/snd/data/
                    ]
         try:
-            if not start_date:
-                start_date = (datetime.now() - timedelta(days=730)).strftime('%Y-%m-%d')
+            # if not start_date:
+            #     start_date = (datetime.now() - timedelta(days=730)).strftime('%Y-%m-%d')
             
             if series_id in exports:
                 freq = 'monthly'
@@ -66,7 +66,7 @@ class EIADataFetcher:
                 'data[0]': 'value',
                 'facets[series][]': series_id,
                 'api_key': self.api_key,
-                'start': start_date,
+                #'start': start_date,
                 'sort[0][column]': 'period',
                 'sort[0][direction]': 'desc',
                 'offset': 0,
