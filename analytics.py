@@ -77,6 +77,7 @@ class NaturalGasAnalytics:
                 df['capacity_bcfd'] = capacity
                 df['operator'] = facility_info['operator']
                 df['location'] = facility_info['location']
+                df['future_capacity'] = facility_info['future_capacity']
                 
                 utilization_data.append(df)
         
