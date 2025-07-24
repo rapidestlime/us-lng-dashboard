@@ -22,17 +22,14 @@ def get_data_scheduler():
     return scheduler
 
 def create_enhanced_lng_dashboard(scheduler: DataScheduler):
-    """Enhanced LNG Export Analytics Dashboard"""
     st.header("🚢 U.S. LNG Export Analytics Dashboard")
-    
-    # Get cached data
-    lng_data = scheduler.get_cached_data('lng_data')
-    if not lng_data:
-        st.error("LNG data not available. Please check data pipeline.")
-        return
-    
-    analytics = NaturalGasAnalytics()
-    utilization_df = analytics.calculate_lng_utilization(lng_data)
+    with st.spinner("Loading LNG data..."):
+        lng_data = scheduler.get_cached_data('lng_data')
+        if not lng_data:
+            st.error("LNG data not available. Please check data pipeline.")
+            return
+        analytics = NaturalGasAnalytics()
+        utilization_df = analytics.calculate_lng_utilization(lng_data)
     
     if utilization_df.empty:
         st.warning("No LNG utilization data available")
@@ -183,140 +180,136 @@ def create_enhanced_lng_dashboard(scheduler: DataScheduler):
         )
 
 def create_enhanced_storage_dashboard(scheduler: DataScheduler):
-    """Enhanced Storage Analytics Dashboard"""
     st.header("📊 U.S. Natural Gas Storage Analytics")
-    
-    # Get cached data
-    storage_data = scheduler.get_cached_data('storage_data')
-    # st.write("DEBUG: storage_data keys:", list(storage_data.keys()) if storage_data else "No data")
-    if not storage_data:
-        st.error("Storage data not available. Please check data pipeline.")
-        return
-    
-    analytics = NaturalGasAnalytics()
-    
-    # Process total storage data
-    if 'storage_total' in storage_data:
-        total_storage = storage_data['storage_total']
-        # st.write("DEBUG: total_storage shape:", total_storage.shape)
-        # st.write("DEBUG: total_storage columns:", total_storage.columns)
-        # st.write("DEBUG: total_storage head:", total_storage.head())
-        percentile_df = analytics.calculate_storage_percentiles(total_storage)
-        # st.write("DEBUG: percentile_df shape:", percentile_df.shape if hasattr(percentile_df, 'shape') else "No df")
+    with st.spinner("Loading storage data..."):
+        storage_data = scheduler.get_cached_data('storage_data')
+        if not storage_data:
+            st.error("Storage data not available. Please check data pipeline.")
+            return
+        analytics = NaturalGasAnalytics()
         
-        if not percentile_df.empty:
-            latest = percentile_df.iloc[-1]
+        # Process total storage data
+        if 'storage_total' in storage_data:
+            total_storage = storage_data['storage_total']
+            # st.write("DEBUG: total_storage shape:", total_storage.shape)
+            # st.write("DEBUG: total_storage columns:", total_storage.columns)
+            # st.write("DEBUG: total_storage head:", total_storage.head())
+            percentile_df = analytics.calculate_storage_percentiles(total_storage)
+            # st.write("DEBUG: percentile_df shape:", percentile_df.shape if hasattr(percentile_df, 'shape') else "No df")
             
-            # Key metrics
-            col1, col2, col3, col4 = st.columns(4)
-            
-            with col1:
-                st.metric("Current Storage", f"{latest['current_storage']:.0f} BCF")
-            
-            with col2:
-                color = "normal"
-                if latest['percentile'] > 80:
-                    color = "inverse"
-                elif latest['percentile'] < 20:
-                    color = "off"
-                st.metric("Storage Percentile", f"{latest['percentile']:.0f}%")
-            
-            with col3:
-                deviation = latest['current_storage'] - latest['historical_mean']
-                st.metric("vs. 5Y Average", f"{deviation:+.0f} BCF")
-            
-            with col4:
-                # Days of supply at current withdrawal rate (simplified)
-                days_supply = latest['current_storage'] / 3.5  # Assume 3.5 BCF/d avg withdrawal
-                st.metric("Days of Supply", f"{days_supply:.0f} days")
-            
-            # Storage visualization
-            fig = make_subplots(
-                rows=2, cols=2,
-                subplot_titles=('Storage vs Historical Range', 'Storage Percentile Trend', 
-                               'Regional Storage Distribution', 'Z-Score Analysis'),
-                specs=[[{"secondary_y": False}, {"secondary_y": False}],
-                       [{"secondary_y": False}, {"secondary_y": False}]]
-            )
-            
-            # Main storage chart
-            fig.add_trace(
-                go.Scatter(x=percentile_df['period'], y=percentile_df['historical_max'],
-                          fill=None, mode='lines', line_color='rgba(0,0,0,0)', showlegend=False),
-                row=1, col=1
-            )
-            fig.add_trace(
-                go.Scatter(x=percentile_df['period'], y=percentile_df['historical_min'],
-                          fill='tonexty', mode='lines', line_color='rgba(0,0,0,0)',
-                          name='5Y Range', fillcolor='rgba(128,128,128,0.2)'),
-                row=1, col=1
-            )
-            fig.add_trace(
-                go.Scatter(x=percentile_df['period'], y=percentile_df['historical_mean'],
-                          mode='lines', name='5Y Average', line=dict(color='blue', dash='dash')),
-                row=1, col=1
-            )
-            fig.add_trace(
-                go.Scatter(x=percentile_df['period'], y=percentile_df['current_storage'],
-                          mode='lines', name='Current', line=dict(color='red', width=3)),
-                row=1, col=1
-            )
-            
-            # Percentile trend
-            fig.add_trace(
-                go.Scatter(x=percentile_df['period'], y=percentile_df['percentile'],
-                          mode='lines+markers', name='Percentile', line=dict(color='green')),
-                row=1, col=2
-            )
-            fig.add_hline(y=80, line_dash="dash", line_color="red", row=1, col=2)
-            fig.add_hline(y=20, line_dash="dash", line_color="red", row=1, col=2)
-            
-            # Regional storage (if available)
-            regional_data = []
-            regions = ['storage_east', 'storage_midwest', 'storage_mountain', 'storage_pacific', 'storage_southcentral']
-            region_names = ['East', 'Midwest', 'Mountain', 'Pacific', 'South Central']
-            
-            for region, name in zip(regions, region_names):
-                if region in storage_data and not storage_data[region].empty:
-                    latest_regional = storage_data[region].iloc[-1]['value']
-                    regional_data.append({'region': name, 'storage': latest_regional})
-            
-            if regional_data:
-                regional_df = pd.DataFrame(regional_data)
-                fig.add_trace(
-                    go.Bar(x=regional_df['region'], y=regional_df['storage'],
-                          name='Regional Storage', marker_color='lightblue'),
-                    row=2, col=1
-                )
-            
-            # Z-score analysis
-            fig.add_trace(
-                go.Scatter(x=percentile_df['period'], y=percentile_df['z_score'],
-                          mode='lines+markers', name='Z-Score', line=dict(color='purple')),
-                row=2, col=2
-            )
-            fig.add_hline(y=2, line_dash="dash", line_color="red", row=2, col=2)
-            fig.add_hline(y=-2, line_dash="dash", line_color="red", row=2, col=2)
-            
-            fig.update_layout(height=800, title_text="Storage Analytics Dashboard")
-            st.plotly_chart(fig, use_container_width=True)
-            
-            # Storage alerts
-            anomalies = analytics.detect_storage_anomalies(percentile_df)
-            
-            if any(anomalies.values()):
-                st.subheader("⚠️ Storage Alerts")
+            if not percentile_df.empty:
+                latest = percentile_df.iloc[-1]
                 
-                for alert_type, alerts in anomalies.items():
-                    for alert in alerts:
-                        if alert_type == 'high_storage':
-                            st.warning(f"🔴 {alert['message']}")
-                        elif alert_type == 'low_storage':
-                            st.error(f"🟡 {alert['message']}")
-                        else:
-                            st.info(f"📊 {alert['message']}")
-            else:
-                st.success("✅ No storage anomalies detected")
+                # Key metrics
+                col1, col2, col3, col4 = st.columns(4)
+                
+                with col1:
+                    st.metric("Current Storage", f"{latest['current_storage']:.0f} BCF")
+                
+                with col2:
+                    color = "normal"
+                    if latest['percentile'] > 80:
+                        color = "inverse"
+                    elif latest['percentile'] < 20:
+                        color = "off"
+                    st.metric("Storage Percentile", f"{latest['percentile']:.0f}%")
+                
+                with col3:
+                    deviation = latest['current_storage'] - latest['historical_mean']
+                    st.metric("vs. 5Y Average", f"{deviation:+.0f} BCF")
+                
+                with col4:
+                    # Days of supply at current withdrawal rate (simplified)
+                    days_supply = latest['current_storage'] / 3.5  # Assume 3.5 BCF/d avg withdrawal
+                    st.metric("Days of Supply", f"{days_supply:.0f} days")
+                
+                # Storage visualization
+                fig = make_subplots(
+                    rows=2, cols=2,
+                    subplot_titles=('Storage vs Historical Range', 'Storage Percentile Trend', 
+                                   'Regional Storage Distribution', 'Z-Score Analysis'),
+                    specs=[[{"secondary_y": False}, {"secondary_y": False}],
+                           [{"secondary_y": False}, {"secondary_y": False}]]
+                )
+                
+                # Main storage chart
+                fig.add_trace(
+                    go.Scatter(x=percentile_df['period'], y=percentile_df['historical_max'],
+                              fill=None, mode='lines', line_color='rgba(0,0,0,0)', showlegend=False),
+                    row=1, col=1
+                )
+                fig.add_trace(
+                    go.Scatter(x=percentile_df['period'], y=percentile_df['historical_min'],
+                              fill='tonexty', mode='lines', line_color='rgba(0,0,0,0)',
+                              name='5Y Range', fillcolor='rgba(128,128,128,0.2)'),
+                    row=1, col=1
+                )
+                fig.add_trace(
+                    go.Scatter(x=percentile_df['period'], y=percentile_df['historical_mean'],
+                              mode='lines', name='5Y Average', line=dict(color='blue', dash='dash')),
+                    row=1, col=1
+                )
+                fig.add_trace(
+                    go.Scatter(x=percentile_df['period'], y=percentile_df['current_storage'],
+                              mode='lines', name='Current', line=dict(color='red', width=3)),
+                    row=1, col=1
+                )
+                
+                # Percentile trend
+                fig.add_trace(
+                    go.Scatter(x=percentile_df['period'], y=percentile_df['percentile'],
+                              mode='lines+markers', name='Percentile', line=dict(color='green')),
+                    row=1, col=2
+                )
+                fig.add_hline(y=80, line_dash="dash", line_color="red", row=1, col=2)
+                fig.add_hline(y=20, line_dash="dash", line_color="red", row=1, col=2)
+                
+                # Regional storage (if available)
+                regional_data = []
+                regions = ['storage_east', 'storage_midwest', 'storage_mountain', 'storage_pacific', 'storage_southcentral']
+                region_names = ['East', 'Midwest', 'Mountain', 'Pacific', 'South Central']
+                
+                for region, name in zip(regions, region_names):
+                    if region in storage_data and not storage_data[region].empty:
+                        latest_regional = storage_data[region].iloc[-1]['value']
+                        regional_data.append({'region': name, 'storage': latest_regional})
+                
+                if regional_data:
+                    regional_df = pd.DataFrame(regional_data)
+                    fig.add_trace(
+                        go.Bar(x=regional_df['region'], y=regional_df['storage'],
+                              name='Regional Storage', marker_color='lightblue'),
+                        row=2, col=1
+                    )
+                
+                # Z-score analysis
+                fig.add_trace(
+                    go.Scatter(x=percentile_df['period'], y=percentile_df['z_score'],
+                              mode='lines+markers', name='Z-Score', line=dict(color='purple')),
+                    row=2, col=2
+                )
+                fig.add_hline(y=2, line_dash="dash", line_color="red", row=2, col=2)
+                fig.add_hline(y=-2, line_dash="dash", line_color="red", row=2, col=2)
+                
+                fig.update_layout(height=800, title_text="Storage Analytics Dashboard")
+                st.plotly_chart(fig, use_container_width=True)
+                
+                # Storage alerts
+                anomalies = analytics.detect_storage_anomalies(percentile_df)
+                
+                if any(anomalies.values()):
+                    st.subheader("⚠️ Storage Alerts")
+                    
+                    for alert_type, alerts in anomalies.items():
+                        for alert in alerts:
+                            if alert_type == 'high_storage':
+                                st.warning(f"🔴 {alert['message']}")
+                            elif alert_type == 'low_storage':
+                                st.error(f"🟡 {alert['message']}")
+                            else:
+                                st.info(f"📊 {alert['message']}")
+                else:
+                    st.success("✅ No storage anomalies detected")
 
 def main():
     st.set_page_config(
@@ -327,7 +320,8 @@ def main():
     )
     
     # Initialize scheduler
-    scheduler = get_data_scheduler()
+    with st.spinner("Initializing data scheduler..."):
+        scheduler = get_data_scheduler()
     
     st.title("⛽ Natural Gas Analytics Dashboard")
     st.markdown("*Real-time analytics for natural gas trading opportunities*")
@@ -383,13 +377,12 @@ def main():
         create_news_dashboard(scheduler)
 
 def create_news_dashboard(scheduler: DataScheduler):
-    """Enhanced News Dashboard"""
     st.header("📰 Market News & Analysis")
-    
-    news_data = scheduler.get_cached_data('news_data')
-    if not news_data:
-        st.warning("No news data available")
-        return
+    with st.spinner("Loading news..."):
+        news_data = scheduler.get_cached_data('news_data')
+        if not news_data:
+            st.warning("No news data available")
+            return
     
     # News sentiment analysis - not using alphavantage for now
     # sentiments = [float(article.get('overall_sentiment_score', 0)) for article in news_data]
