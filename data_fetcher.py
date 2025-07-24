@@ -20,10 +20,10 @@ class EIADataFetcher:
             logger.error("EIA API key not configured")
             return pd.DataFrame()
         
-        storage = ['NW2_EPG0_SAO_R48_BCF', #natural-gas/stor/wkly/data/
-                   'NW2_EPG0_SAO_R88_BCF',
-                   'NW2_EPG0_SAO_R89_BCF',
-                   'NW2_EPG0_SAO_R87_BCF'
+        storage = ['NW2_EPG0_SWO_R48_BCF', #natural-gas/stor/wkly/data/
+                   'NW2_EPG0_SWO_R88_BCF',
+                   'NW2_EPG0_SWO_R89_BCF',
+                   'NW2_EPG0_SWO_R87_BCF'
                    ]
         
         exports = ['N9133US2', #natural-gas/move/expc/data/
@@ -52,7 +52,7 @@ class EIADataFetcher:
             elif series_id in storage:
                 url_extend = 'natural-gas/stor/wkly/data/'
                 freq = 'weekly'
-            else:
+            elif series_id in production:
                 freq = 'monthly'
                 if series_id == 'N9070US2':
                     url_extend = 'natural-gas/sum/snd/data/'
