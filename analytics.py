@@ -71,7 +71,7 @@ class NaturalGasAnalytics:
                 capacity = facility_info['current_capacity']
                 
                 # Convert monthly BCF to daily Bcf/d (approximate)
-                df['daily_exports'] = df['value'] / 30.44  # Average days per month
+                df['daily_exports'] = (df['value'] / 30.44) / 1000  # Convert MMcf/month to Bcf/d
                 df['utilization_rate'] = (df['daily_exports'] / capacity) * 100
                 df['facility'] = facility_name
                 df['capacity_bcfd'] = capacity

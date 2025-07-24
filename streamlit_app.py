@@ -160,20 +160,8 @@ def create_enhanced_lng_dashboard(scheduler: DataScheduler):
     # Facility details table
     st.subheader("🏭 Facility Details")
     
-    facility_summary = latest_data.merge(
-        pd.DataFrame([
-            {
-                'facility': name,
-                'operator': info['operator'],
-                'location': info['location'],
-                'future_capacity': info['future_capacity']
-            }
-            for name, info in Config.LNG_FACILITIES.items()
-        ]),
-        on='facility',
-        how='left'
-    )
-    
+    facility_summary = latest_data  # No need to merge, columns already present
+
     display_cols = [
         'facility', 'operator', 'location', 'capacity_bcfd', 
         'future_capacity', 'utilization_rate', 'daily_exports'
