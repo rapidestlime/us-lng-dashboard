@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+import urllib.parse
 import json
 from datetime import datetime, timedelta
 import logging
@@ -130,7 +131,7 @@ class NewsDataFetcher:
             # }
             url = "https://newsapi.org/v2/everything"
             params = {
-                'q': '"natural gas" OR "lng"',
+                'q': urllib.parse.quote('"natural gas" OR "lng"'),
                 'searchIn': 'content',
                 'sortBy': 'publishedAt',
                 'language': 'en',
