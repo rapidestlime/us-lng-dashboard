@@ -22,6 +22,7 @@ class NaturalGasAnalytics:
             
         # Add temporal features
         storage_df = storage_df.copy()
+        storage_df['period'] = pd.to_datetime(storage_df['period'])
         storage_df['week'] = storage_df['period'].dt.isocalendar().week
         storage_df['year'] = storage_df['period'].dt.year
         storage_df['month'] = storage_df['period'].dt.month
