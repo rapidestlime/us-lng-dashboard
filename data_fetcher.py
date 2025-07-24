@@ -21,9 +21,11 @@ class EIADataFetcher:
             return pd.DataFrame()
         
         storage = ['NW2_EPG0_SWO_R48_BCF', #natural-gas/stor/wkly/data/
-                   'NW2_EPG0_SWO_R88_BCF',
-                   'NW2_EPG0_SWO_R89_BCF',
-                   'NW2_EPG0_SWO_R87_BCF'
+                   'NW2_EPG0_SWO_R31_BCF',
+                   'NW2_EPG0_SWO_R32_BCF',
+                   'NW2_EPG0_SWO_R33_BCF',
+                   'NW2_EPG0_SWO_R34_BCF',
+                   'NW2_EPG0_SWO_R35_BCF'
                    ]
         
         exports = ['N9133US2', #natural-gas/move/expc/data/

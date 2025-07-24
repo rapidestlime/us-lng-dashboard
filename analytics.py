@@ -64,7 +64,7 @@ class NaturalGasAnalytics:
         
         for facility_name, facility_info in self.facilities.items():
             # Map facility name to data key
-            data_key = facility_name.lower().replace(' ', '_')
+            data_key = f"lng_{facility_name.lower().replace(' ', '_')}"
             
             if data_key in lng_data and not lng_data[data_key].empty:
                 df = lng_data[data_key].copy()

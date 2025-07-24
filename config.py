@@ -27,9 +27,11 @@ class Config:
         
         # Storage (Weekly, BCF)
         'storage_total': 'NW2_EPG0_SWO_R48_BCF',
-        'storage_east': 'NW2_EPG0_SWO_R88_BCF',
-        'storage_west': 'NW2_EPG0_SWO_R89_BCF',
-        'storage_producing': 'NW2_EPG0_SWO_R87_BCF',
+        'storage_east': 'NW2_EPG0_SWO_R31_BCF',
+        'storage_midwest': 'NW2_EPG0_SWO_R32_BCF',
+        'storage_mountain': 'NW2_EPG0_SWO_R34_BCF',
+        'storage_pacific': 'NW2_EPG0_SWO_R35_BCF',
+        'storage_southcentral': 'NW2_EPG0_SWO_R33_BCF',
         
         # Production (Monthly, BCF)
         'production_total': 'N9050US2',

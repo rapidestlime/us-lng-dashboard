@@ -280,8 +280,8 @@ def create_enhanced_storage_dashboard(scheduler: DataScheduler):
             
             # Regional storage (if available)
             regional_data = []
-            regions = ['storage_east', 'storage_west', 'storage_producing']
-            region_names = ['East', 'West', 'Producing']
+            regions = ['storage_east', 'storage_midwest', 'storage_mountain', 'storage_pacific', 'storage_southcentral']
+            region_names = ['East', 'Midwest', 'Mountain', 'Pacific', 'South Central']
             
             for region, name in zip(regions, region_names):
                 if region in storage_data and not storage_data[region].empty:
