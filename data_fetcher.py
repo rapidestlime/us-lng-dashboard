@@ -131,7 +131,7 @@ class NewsDataFetcher:
             # }
             url = "https://newsapi.org/v2/everything"
             params = {
-                'q': urllib.parse.quote('"natural gas" OR "lng"'),
+                'q': '("natural gas" OR lng)',
                 'searchIn': 'content',
                 'sortBy': 'publishedAt',
                 'language': 'en',
